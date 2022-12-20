@@ -1,0 +1,22 @@
+name: create docker
+on:
+  workflow_dispatch:
+    branches:
+      - main
+jobs:
+  create-docker:
+    name: create docker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker/setup-qemu-action@v2
+      - uses: docker/setup-buildx-action@v2
+      - uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v2
+        with:
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: ghcr.io/sylvek/collect-veolia-data:latest
